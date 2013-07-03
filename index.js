@@ -6,19 +6,18 @@ MongoClient.connect("mongodb://localhost:27017/flashcardBoxes", function(err, db
   if (err) return console.log(err);
 
   var boxes = db.collection("boxes");
-  boxes.find().toArray(function(err, boxes) {
-    if (err) return console.log(err);
 
-    console.log(boxes);
+  app.get('/', function(req, res) {
+
+    boxes.find().toArray(function(err, result) {
+      if (err) return console.log(err);
+
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Length', result.length);
+      res.end(result.toString());
+    });
+
   });
-});
-
-app.get('/', function(req, res) {
-  var body = 'Hello World';
-
-  res.setHeader('Content-Type', 'text/plain');
-  res.setHeader('Content-Length', body.length);
-  res.end(body);
 });
 
 app.listen(3000);
