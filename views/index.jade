@@ -1,0 +1,51 @@
+!!! 5
+html
+  head
+    title Welcome
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js')
+    script(src='/javascripts/questions.js')
+    script(src='/javascripts/ouicards.js')
+    link(rel='stylesheet', href='/stylesheets/example.css')
+    link(rel='stylesheet', href='/stylesheets/fonts.css')
+  body
+    .flashcard
+      h1= pageTitle
+      .upload
+        label.upload-questions-label Upload Questions
+        form( method='post', action='/new' )
+          textarea( name='questions', id='questions-input-area', cols=80, rows=10, placeholder='Copy/ paste your comma-separated questions here.' )
+          input( type='submit', value='Load questions', id='load-questions' )
+      .question
+        p Click here to show instructions
+      .answer
+        p
+          | Upload your comma-separated questions above. Each question goes on a separate line.
+        p
+          | To reveal an answer click on the dark-blue question area (like you just did) or click this answer section.
+        p
+          | Fun fact: This application uses the
+          a(href='http://en.wikipedia.org/wiki/Leitner_system', target='_blank') Leitner System
+          | . Enjoy!
+      .controls
+        .correct
+          label.icon-checkmark
+        .wrong
+          label.icon-close
+      .footer
+        .stats
+          .questions-count 0 questions - time to load some!
+          .current-stats
+            label.icon-stats
+            label#stat-details 0 - 0 - 0
+    script(src='/javascripts/example.js')
+    script.
+      // Detect if user has flashcards in localStorage for the current box_id
+      // If yes, user can continue with their session
+      // Otherwise, load from DB (which resets localStorage) and
+      // Assign current box_id to localStorage
+      if (!localStorage.flashcards || localStorage.flashcards === '[]' || localStorage.box_id !== JSON.parse('!{box_id}')) {
+        ouicards.loadFromArray(JSON.parse('!{questions}'))
+        localStorage.box_id = JSON.parse('!{box_id}')
+      }
+      initializeHandlers();
