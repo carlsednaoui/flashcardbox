@@ -12,7 +12,11 @@ app.configure(function(){
 });
 
 var FlashcardBox = require('./flashcardbox').FlashcardBox;
-var flashcardBox = new FlashcardBox('localhost', 27017);
+// var flashcardBox = new FlashcardBox('localhost', 27017);
+
+var MONGOLAB_URI = 'mongodb://heroku_app16837523:d1eb4d6hem1tvo0gcmj4jgl5mb@ds035498.mongolab.com:35498/heroku_app16837523';
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/flashcardbox';
+var flashcardBox = new FlashcardBox(mongoUri);
 
 app.get('/', function(req, res) {
   res.render('index.jade', {
