@@ -1,20 +1,7 @@
-// var Db = require('mongodb').Db;
-// var Connection = require('mongodb').Connection;
-// var Server = require('mongodb').Server;
-// var BSON = require('mongodb').BSON;
-// var ObjectID = require('mongodb').ObjectID;
-
-// FlashcardBox = function(host, port) {
-//   this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}), {safe: false});
-//   this.db.open(function(){});
-// };
-
-var mongostr = process.env.MONGOLAB_URI || "mongodb://localhost/flashcardbox";
-console.log(mongostr);
-
-var connect = require('connect');
-var mongo = require('mongodb');
-var database = null;
+var mongostr = process.env.MONGOLAB_URI || "mongodb://localhost/flashcardbox",
+    connect  = require('connect'),
+    mongo    = require('mongodb'),
+    database = null;
 
 FlashcardBox = function() {
   mongo.connect(mongostr, {}, function(error, db){

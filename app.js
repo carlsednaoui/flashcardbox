@@ -11,10 +11,13 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
+
+// Initialize FlashcardBox
 var FlashcardBox = require('./flashcardbox').FlashcardBox;
-// var flashcardBox = new FlashcardBox('localhost', 27017);
 var flashcardBox = new FlashcardBox();
 
+
+// Routes
 app.get('/', function(req, res) {
   res.render('index.jade', {
     pageTitle: 'Welcome',
@@ -46,6 +49,8 @@ app.get('/:id', function(req, res) {
   });
 });
 
+
+// Use Heroku port or localhost:3000
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
