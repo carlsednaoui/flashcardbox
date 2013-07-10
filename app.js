@@ -24,19 +24,19 @@ app.get('/', function(req, res) {
 
 app.post('/new', function(req, res) {
   flashcardBox.save({
-    questions: req.param('questions')
-  }, function (error, questions) {
-    res.redirect('/' + questions.box_id);
+    flashcards: req.param('flashcards')
+  }, function (error, flashcards) {
+    res.redirect('/' + flashcards.box_id);
   });
 });
 
 app.get('/:id', function(req, res) {
-  flashcardBox.findById(req.params.id + '', function(error, questions) {
-    if (!error && questions) {
+  flashcardBox.findById(req.params.id + '', function(error, flashcards) {
+    if (!error && flashcards) {
       res.render('index.jade', {
-        pageTitle: questions.box_id,
-        questions: JSON.stringify(questions.questions),
-        box_id: JSON.stringify(questions.box_id)
+        pageTitle: flashcards.box_id,
+        questions: JSON.stringify(flashcards.questions),
+        box_id: JSON.stringify(flashcards.box_id)
       });
     } else {
       console.log('User tried going to a URL that does not exist: ' + req.params.id);

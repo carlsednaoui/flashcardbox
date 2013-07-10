@@ -19,7 +19,7 @@ var ObjectID = require('mongodb').ObjectID;
 // });
 
 FlashcardBox = function(host, port) {
-  this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}));
+  this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}), {safe: false});
   this.db.open(function(){});
 };
 
@@ -77,16 +77,16 @@ FlashcardBox.prototype.createRandomId = function(callback) {
 
 
 
-FlashcardBox.prototype.save = function(questions, callback) {
+FlashcardBox.prototype.save = function(flashcards, callback) {
   var that = this;
   this.getCollection(function(error, box_collection) {
     if (error) callback(error);
     else {
       that.createRandomId(function(randomId) {
-        questions.box_id = randomId;
+        flashcards.box_id = randomId;
 
-        var flashcards = [],
-            qa  = questions.questions.split('\n');
+        var _flashcards = [],
+            qa  = flashcards.flashcards.split('\n');
 
         // Get rid of empty questions
         qa = qa.filter(function(card) {
@@ -95,13 +95,13 @@ FlashcardBox.prototype.save = function(questions, callback) {
 
         qa.forEach(function(card) {
           var parsedCard = card.split(',');
-          flashcards.push({question: parsedCard[0], answer: parsedCard[1].replace('\r', '')});
+          _flashcards.push({question: parsedCard[0], answer: parsedCard[1].replace('\r', '')});
         });
 
-        questions.questions = flashcards;
+        flashcards.questions = _flashcards;
 
-        box_collection.insert(questions, function() {
-          callback(null, questions);
+        box_collection.insert(flashcards, function() {
+          callback(null, flashcards);
         });
       });
     }
