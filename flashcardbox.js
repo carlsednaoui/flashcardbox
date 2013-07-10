@@ -1,28 +1,33 @@
-var Db = require('mongodb').Db;
-var Connection = require('mongodb').Connection;
-var Server = require('mongodb').Server;
-var BSON = require('mongodb').BSON;
-var ObjectID = require('mongodb').ObjectID;
+// var Db = require('mongodb').Db;
+// var Connection = require('mongodb').Connection;
+// var Server = require('mongodb').Server;
+// var BSON = require('mongodb').BSON;
+// var ObjectID = require('mongodb').ObjectID;
 
-FlashcardBox = function(host, port) {
-  this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}), {safe: false});
-  this.db.open(function(){});
-};
-
-// // Heroku MongoDB Connection
-// var mongo = require('mongodb');
-
-// FlashcardBox = function(mongoUri) {
-//   mongo.Db.connect(mongoUri, function (err, db) {
-//     db.collection('boxes', function(er, collection) {
-//       collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
-//       });
-//     });
-//   });
+// FlashcardBox = function(host, port) {
+//   this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}), {safe: false});
+//   this.db.open(function(){});
 // };
 
+var mongostr = process.env.MONGOLAB_URI || "mongodb://localhost/flashcardbox";
+console.log(mongostr);
+
+var connect = require('connect');
+var mongo = require('mongodb');
+var database = null;
+
+FlashcardBox = function() {
+  mongo.connect(mongostr, {}, function(error, db){
+    console.log("connected, db: " + db.databaseName);
+    database = db;
+    database.addListener("error", function(error){
+      console.log("Error connecting to MongoLab");
+    });
+  });
+};
+
 FlashcardBox.prototype.getCollection= function(callback) {
-  this.db.collection('boxes', function(error, box_collection) {
+  database.collection('boxes', function(error, box_collection) {
     if( error ) callback(error);
     else callback(null, box_collection);
   });
@@ -91,7 +96,8 @@ FlashcardBox.prototype.save = function(flashcards, callback) {
 
         qa.forEach(function(card) {
           var parsedCard = card.split(',');
-          _flashcards.push({question: parsedCard[0], answer: parsedCard[1].replace('\r', '')});
+          if (parsedCard[0] && parsedCard[1])
+            _flashcards.push({question: parsedCard[0], answer: parsedCard[1].replace('\r', '')});
         });
 
         flashcards.questions = _flashcards;
