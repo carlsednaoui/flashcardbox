@@ -4,6 +4,20 @@ var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
+// var MONGOLAB_URI = 'mongodb://heroku_app16837523:d1eb4d6hem1tvo0gcmj4jgl5mb@ds035498.mongolab.com:35498/heroku_app16837523';
+// var mongo = require('mongodb');
+
+// var mongoUri = process.env.MONGOLAB_URI ||
+//   process.env.MONGOHQ_URL ||
+//   'mongodb://localhost/mydb';
+
+// mongo.Db.connect(mongoUri, function (err, db) {
+//   db.collection('mydocs', function(er, collection) {
+//     collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
+//     });
+//   });
+// });
+
 FlashcardBox = function(host, port) {
   this.db = new Db('flashcardbox', new Server(host, port, {auto_reconnect: true}, {}));
   this.db.open(function(){});
